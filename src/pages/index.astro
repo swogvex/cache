@@ -1,17 +1,23 @@
 ---
+import Base from '../layouts/Base.astro';
+import { getArtworks } from '../lib/artworks';
 
+const artworks = await getArtworks();
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Base>
+  <main>
+    <ol class="list">
+      {
+        artworks.map((a) => (
+          <li class="row">
+            <span class="num">{a.number}</span>
+            <span class="title">{a.title}</span>
+            <span class="author">{a.author}</span>
+            <span class="date">{a.date}</span>
+          </li>
+        ))
+      }
+    </ol>
+  </main>
+</Base>
