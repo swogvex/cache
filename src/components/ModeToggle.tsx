@@ -1,5 +1,5 @@
 import { useStore } from '@nanostores/react';
-import { $mode } from '../stores/gallery';
+import { $activeId, $mode } from '../stores/gallery';
 
 export default function ModeToggle() {
   const mode = useStore($mode);
@@ -8,9 +8,12 @@ export default function ModeToggle() {
   return (
     <button
       type="button"
-      className="nav-link"
+      className="nav-link mode-toggle"
       aria-label={`Switch to ${next} mode`}
-      onClick={() => $mode.set(next)}
+      onClick={() => {
+        $mode.set(next);
+        if (next === 'cursor') $activeId.set(null);
+      }}
     >
       {next}
     </button>
