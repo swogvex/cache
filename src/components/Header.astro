@@ -1,0 +1,25 @@
+---
+import ModeToggle from './ModeToggle';
+
+interface Props {
+  view: 'index' | 'canvas';
+}
+
+const { view } = Astro.props;
+---
+
+<header class="site-header">
+  <a href="/" class="brand"><sup>g</sup> Cache</a>
+  <nav class="nav">
+    {
+      view === 'index' ? (
+        <>
+          <ModeToggle client:load />
+          <a class="nav-link" href="/canvas">canvas</a>
+        </>
+      ) : (
+        <a class="nav-link" href="/">index</a>
+      )
+    }
+  </nav>
+</header>

@@ -30,6 +30,16 @@ a {
   text-decoration: none;
 }
 
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* Cabecera */
 .site-header {
   display: flex;
   justify-content: space-between;
@@ -49,21 +59,49 @@ a {
   font-weight: 400;
 }
 
+.nav {
+  display: flex;
+  gap: 16px;
+}
+
+.nav-link {
+  color: var(--muted);
+}
+
+.nav-link:hover,
+.nav-link:focus-visible {
+  color: var(--text);
+}
+
+/* Lista */
 .list {
   list-style: none;
   margin: 0;
   padding: 0 var(--gutter);
 }
 
+.list>li {
+  border-bottom: 1px solid var(--line);
+}
+
 .row {
   display: grid;
-  grid-template-columns: 48px minmax(0, 1fr) minmax(0, 1fr) 96px;
+  grid-template-columns: 48px 40px minmax(0, 1fr) minmax(0, 1fr) 96px;
+  width: 100%;
   height: var(--row-h);
-  border-bottom: 1px solid var(--line);
+  text-align: left;
   white-space: nowrap;
 }
 
-.row > span {
+.row>img {
+  align-self: center;
+  justify-self: center;
+  width: 28px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.row>span {
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -75,4 +113,42 @@ a {
 
 .row .date {
   text-align: right;
+}
+
+.row[data-active='true'],
+.row[data-active='true']>span {
+  color: var(--accent);
+}
+
+.row:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: -1px;
+}
+
+/* Provisional */
+.placeholder {
+  padding: var(--gutter);
+  color: var(--muted);
+}
+
+/* Móvil y pantallas táctiles */
+@media (hover: none) {
+  :root {
+    --row-h: 36px;
+  }
+}
+
+@media (max-width: 640px) {
+  :root {
+    --gutter: 16px;
+  }
+
+  .row {
+    grid-template-columns: 36px 36px minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .row .date {
+    display: none;
+  }
+
 }

@@ -1,5 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
+import ArtworkIndex from '../components/ArtworkIndex';
 import { getArtworks } from '../lib/artworks';
 
 const artworks = await getArtworks();
@@ -7,17 +8,6 @@ const artworks = await getArtworks();
 
 <Base>
   <main>
-    <ol class="list">
-      {
-        artworks.map((a) => (
-          <li class="row">
-            <span class="num">{a.number}</span>
-            <span class="title">{a.title}</span>
-            <span class="author">{a.author}</span>
-            <span class="date">{a.date}</span>
-          </li>
-        ))
-      }
-    </ol>
+    <ArtworkIndex client:load artworks={artworks} />
   </main>
 </Base>
