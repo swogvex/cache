@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useLayoutEffect, useRef } from 'react';
 import { useStore } from '@nanostores/react';
 import type { Artwork } from '../lib/artworks';
-import { $activeId, $mode } from '../stores/gallery';
+import { preload } from '../lib/preload';
+import { $activeId, $mode, $openId } from '../stores/gallery';
 
 interface Props {
   artworks: Artwork[];
@@ -18,16 +19,6 @@ const MAX_H = 256;
 const OFFSET = 24;
 const MARGIN = 12;
 
-const preloaded = new Set<string>();
-
-function preload(src: string) {
-  if (preloaded.has(src)) return;
-  preloaded.add(src);
-  const img = new Image();
-  img.decoding = 'async';
-  img.src = src;
-}
-
 function fit(width: number, height: number) {
   const scale = Math.min(MAX_W / width, MAX_H / height);
   return { width: Math.round(width * scale), height: Math.round(height * scale) };
@@ -40,13 +31,14 @@ function clamp(value: number, min: number, max: number) {
 export default function CursorPreview({ artworks }: Props) {
   const activeId = useStore($activeId);
   const mode = useStore($mode);
+  const openId = useStore($openId);
 
   const boxRef = useRef<HTMLDivElement>(null);
   const pointer = useRef<Pointer>({ x: -1, y: -1, mouse: false });
   const frame = useRef(0);
 
   const artwork =
-    mode === 'cursor' && activeId
+    mode === 'cursor' && !openId && activeId
       ? (artworks.find((item) => item.id === activeId) ?? null)
       : null;
 

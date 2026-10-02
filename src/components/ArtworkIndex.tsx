@@ -1,7 +1,8 @@
 import { useStore } from '@nanostores/react';
 import type { Artwork } from '../lib/artworks';
-import { $activeId } from '../stores/gallery';
+import { $activeId, $openId } from '../stores/gallery';
 import CursorPreview from './CursorPreview';
+import Lightbox from './Lightbox';
 
 interface Props {
   artworks: Artwork[];
@@ -18,14 +19,17 @@ export default function ArtworkIndex({ artworks }: Props) {
             <button
               type="button"
               className="row"
+              data-artwork-id={artwork.id}
               data-active={activeId === artwork.id}
               aria-label={`${artwork.number} ${artwork.title ?? 'Untitled'} ${artwork.author ?? ''}`.trim()}
               onPointerEnter={(event) => {
                 if (event.pointerType === 'mouse') $activeId.set(artwork.id);
               }}
-              onFocus={() => $activeId.set(artwork.id)}
+              onFocus={(event) => {
+                if (event.currentTarget.matches(':focus-visible')) $activeId.set(artwork.id);
+              }}
               onBlur={() => $activeId.set(null)}
-              onClick={() => $activeId.set(artwork.id)}
+              onClick={() => $openId.set(artwork.id)}
             >
               <span className="num">{artwork.number}</span>
               <img
@@ -44,6 +48,7 @@ export default function ArtworkIndex({ artworks }: Props) {
         ))}
       </ol>
       <CursorPreview artworks={artworks} />
+      <Lightbox artworks={artworks} />
     </>
   );
 }

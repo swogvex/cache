@@ -7,3 +7,6 @@ export const $mode = atom<ViewMode>('cursor');
 
 /** Id de la obra resaltada (hover, foco o toque). */
 export const $activeId = atom<string | null>(null);
+
+/** Id de la obra abierta en el lightbox (null = cerrado). */
+export const $openId = atom<string | null>(null);
