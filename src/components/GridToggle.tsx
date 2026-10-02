@@ -35,7 +35,7 @@ export default function GridToggle() {
         title="Toggle grid (G)"
         onClick={() => $grid.set(!on)}
       >
-        g
+        B
       </button>
       {on && (
         <div className="grid-overlay" aria-hidden="true">
