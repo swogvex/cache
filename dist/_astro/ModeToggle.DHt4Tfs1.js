@@ -1,1 +1,0 @@
-import{i as e,n as t,s as n,t as r}from"./jsx-runtime.CLJFR8r7.js";var i=r();function a(){let r=n(e)===`cursor`?`stage`:`cursor`;return(0,i.jsx)(`button`,{type:`button`,className:`nav-link mode-toggle`,"aria-label":`Switch to ${r} mode`,onClick:()=>{e.set(r),r===`cursor`&&t.set(null)},children:r})}export{a as default};
