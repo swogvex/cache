@@ -9,19 +9,20 @@ import umapPkg from 'umap-js';
 const { UMAP } = umapPkg;
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const APP_ROOT = path.join(ROOT, 'cache');
-const CONTENT_DIR = path.join(APP_ROOT, 'src', 'content', 'artworks');
+const CONTENT_DIR = path.join(ROOT, 'src', 'content', 'artworks');
 // Carpeta local con las imágenes originales (por defecto, la de pruebas).
 const IMAGES_DIR = process.env.IMAGES_DIR
   ? path.resolve(process.env.IMAGES_DIR)
-  : path.join(APP_ROOT, 'public', 'images');
+  : path.join(ROOT, 'public', 'images');
 const THUMBS_DIR = path.join(IMAGES_DIR, 'thumbs');
-const DATA_DIR = path.join(APP_ROOT, 'src', 'data');
+const MEDIUM_DIR = path.join(IMAGES_DIR, 'medium');
+const DATA_DIR = path.join(ROOT, 'src', 'data');
 const CANVAS_FILE = path.join(DATA_DIR, 'canvas.json');
 const CACHE_FILE = path.join(DATA_DIR, 'embeddings.json');
 
 const MODEL = 'Xenova/clip-vit-base-patch32';
 const THUMB_SIZE = 512;
+const MEDIUM_SIZE = 2000;
 const PADDING = 0.04;
 const VALID_ID = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
@@ -83,18 +84,18 @@ async function loadWorks() {
   return works;
 }
 
-async function ensureThumb(imageFile) {
+async function ensureVariant(imageFile, dir, size, quality) {
   const src = path.join(IMAGES_DIR, imageFile);
-  const out = path.join(THUMBS_DIR, `${path.parse(imageFile).name}.webp`);
+  const out = path.join(dir, `${path.parse(imageFile).name}.webp`);
   const [srcStat, outStat] = await Promise.all([stat(src), stat(out).catch(() => null)]);
-  if (outStat && outStat.mtimeMs >= srcStat.mtimeMs) return false;
+  if (outStat && outStat.mtimeMs >= srcStat.mtimeMs) return 0;
 
   await sharp(src)
     .rotate()
-    .resize({ width: THUMB_SIZE, height: THUMB_SIZE, fit: 'inside', withoutEnlargement: true })
-    .webp({ quality: 80 })
+    .resize({ width: size, height: size, fit: 'inside', withoutEnlargement: true })
+    .webp({ quality })
     .toFile(out);
-  return true;
+  return 1;
 }
 
 let embedder = null;
@@ -167,6 +168,7 @@ function toUnitSquare(points) {
 
 async function main() {
   await mkdir(THUMBS_DIR, { recursive: true });
+  await mkdir(MEDIUM_DIR, { recursive: true });
   await mkdir(DATA_DIR, { recursive: true });
 
   const works = await loadWorks();
@@ -192,7 +194,8 @@ async function main() {
       continue;
     }
 
-    if (await ensureThumb(work.image)) thumbs++;
+    thumbs += await ensureVariant(work.image, THUMBS_DIR, THUMB_SIZE, 80);
+    thumbs += await ensureVariant(work.image, MEDIUM_DIR, MEDIUM_SIZE, 82);
 
     const hash = createHash('sha1')
       .update(await readFile(src))
@@ -225,7 +228,7 @@ async function main() {
   );
 
   console.log(
-    `\n✔ ${ids.length} artworks mapped (${embedded} new, ${reused} cached, ${thumbs} thumbnails created)`,
+    `\n✔ ${ids.length} artworks mapped (${embedded} new, ${reused} cached, ${thumbs} image variants created)`,
   );
   if (ids.length > 0 && ids.length < 5) {
     console.log(

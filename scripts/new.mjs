@@ -7,10 +7,8 @@ import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const APP_ROOT = path.join(ROOT, 'cache');
-const CONTENT_DIR = path.join(APP_ROOT, 'src', 'content', 'artworks');
-// Temporal hasta la v1.0: más adelante será la carpeta que subas a R2.
-const IMAGES_DIR = path.join(APP_ROOT, 'public', 'images');
+const CONTENT_DIR = path.join(ROOT, 'src', 'content', 'artworks');
+const IMAGES_DIR = path.join(ROOT, 'public', 'images');
 const ALLOWED = new Set(['.jpg', '.jpeg', '.png', '.webp', '.avif']);
 
 const exists = (p) =>
@@ -98,6 +96,7 @@ async function main() {
 
     console.log(`\n✔ Created src/content/artworks/${slug}.md`);
     console.log(`✔ Copied image to public/images/${imageName} (${width}×${height})`);
+    console.log('\nNext: pnpm embed → pnpm upload');
   } finally {
     rl.close();
   }

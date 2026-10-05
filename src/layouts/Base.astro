@@ -4,10 +4,15 @@ import Header from '../components/Header.astro';
 
 interface Props {
   title?: string;
+  description?: string;
   view?: 'index' | 'canvas';
 }
 
-const { title = 'Cache', view = 'index' } = Astro.props;
+const {
+  title = 'Cache',
+  description = 'A growing index of paintings, illustrations and other artworks.',
+  view = 'index',
+} = Astro.props;
 ---
 
 <!doctype html>
@@ -16,6 +21,12 @@ const { title = 'Cache', view = 'index' } = Astro.props;
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#ffffff" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   </head>
   <body>
     <Header view={view} />

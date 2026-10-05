@@ -8,13 +8,20 @@ export interface Artwork {
   author: string | null;
   date: string | null;
   image: {
+    /** Versión grande (WebP, 2000 px): lightbox y stage. */
     src: string;
+    /** Miniatura (WebP, 512 px): preview junto al cursor y canvas. */
+    thumb: string;
     width: number;
     height: number;
   };
 }
 
 const base = PUBLIC_IMAGES_BASE_URL.replace(/\/+$/, '');
+
+const stem = (file: string) => file.replace(/\.[^./]+$/, '');
+const variantUrl = (dir: 'thumbs' | 'medium', file: string) =>
+  `${base}/${dir}/${stem(file)}.webp`;
 
 export async function getArtworks(): Promise<Artwork[]> {
   const entries = await getCollection('artworks');
@@ -31,7 +38,8 @@ export async function getArtworks(): Promise<Artwork[]> {
       author: entry.data.author ?? null,
       date: entry.data.date ?? null,
       image: {
-        src: `${base}/${entry.data.image}`,
+        src: variantUrl('medium', entry.data.image),
+        thumb: variantUrl('thumbs', entry.data.image),
         width: entry.data.width,
         height: entry.data.height,
       },

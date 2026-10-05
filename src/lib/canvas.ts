@@ -31,11 +31,6 @@ const MAX_WORLD = 3200;
 
 const round = (n: number) => Math.round(n * 10) / 10;
 
-/** /images/foo.jpg → /images/thumbs/foo.webp (igual en R2). */
-function thumbUrl(src: string): string {
-  return src.replace(/\/([^/]+)\.[^./]+$/, '/thumbs/$1.webp');
-}
-
 export function buildCanvas(artworks: Artwork[]): CanvasScene {
   const placedCount = artworks.filter((artwork) => coords[artwork.id]).length;
   const world = Math.min(MAX_WORLD, Math.max(MIN_WORLD, Math.sqrt(placedCount) * PER_ITEM));
@@ -59,7 +54,7 @@ export function buildCanvas(artworks: Artwork[]): CanvasScene {
         title: artwork.title,
         author: artwork.author,
         date: artwork.date,
-        thumb: thumbUrl(artwork.image.src),
+        thumb: artwork.image.thumb,
         width: round(width),
         height: round(width / ratio),
         cx: round(point[0] * world),

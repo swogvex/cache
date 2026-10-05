@@ -1,3 +1,6 @@
 node_modules/
 .astro/
 dist/
+# Imágenes locales (la fuente de verdad es R2)
+/public/images/
+.wrangler/

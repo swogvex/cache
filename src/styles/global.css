@@ -548,3 +548,8 @@ button {
 .canvas-controls button:focus-visible {
   color: var(--text);
 }
+
+.placeholder a {
+  color: var(--text);
+  text-decoration: underline;
+}

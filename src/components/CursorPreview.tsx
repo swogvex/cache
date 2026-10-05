@@ -108,7 +108,7 @@ export default function CursorPreview({ artworks }: Props) {
     const index = artworks.findIndex((item) => item.id === activeId);
     if (index === -1) return;
     for (const neighbor of [artworks[index - 1], artworks[index + 1]]) {
-      if (neighbor) preload(neighbor.image.src);
+      if (neighbor) preload(neighbor.image.thumb);
     }
   }, [activeId, artworks]);
 
@@ -125,7 +125,7 @@ export default function CursorPreview({ artworks }: Props) {
     >
       <img
         key={artwork.id}
-        src={artwork.image.src}
+        src={artwork.image.thumb}
         alt=""
         decoding="async"
         ref={(el) => {
