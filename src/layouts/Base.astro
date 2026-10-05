@@ -31,5 +31,11 @@ const {
   <body>
     <Header view={view} />
     <slot />
+    <script>
+      import { initBounce } from '../../scripts/bounce';
+
+      const target = document.querySelector<HTMLElement>('[data-bounce]');
+      if (target) initBounce(target);
+    </script>
   </body>
 </html>

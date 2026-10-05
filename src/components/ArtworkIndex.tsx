@@ -17,7 +17,7 @@ export default function ArtworkIndex({ artworks }: Props) {
 
   return (
     <>
-      <div className="gallery" data-mode={mode}>
+      <div className="gallery" data-mode={mode} data-bounce>
         <ol className="list" onPointerLeave={releaseActive}>
           {artworks.map((artwork) => (
             <li key={artwork.id}>
