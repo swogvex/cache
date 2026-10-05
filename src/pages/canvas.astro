@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro';
+import CanvasView from '../components/CanvasView';
+import { getArtworks } from '../lib/artworks';
+import { buildCanvas } from '../lib/canvas';
+
+const artworks = await getArtworks();
+const { items, missing } = buildCanvas(artworks);
+
+if (missing.length > 0) {
+  console.warn(
+    `[canvas] ${missing.length} artwork(s) have no coordinates. Run "pnpm embed": ${missing.join(', ')}`,
+  );
+}
+---
+
+<Base title="Cache — canvas" view="canvas">
+  <main>
+    <CanvasView client:load items={items} artworks={artworks} />
+  </main>
+</Base>

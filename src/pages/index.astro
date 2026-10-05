@@ -1,0 +1,13 @@
+---
+import Base from '../layouts/Base.astro';
+import ArtworkIndex from '../components/ArtworkIndex';
+import { getArtworks } from '../lib/artworks';
+
+const artworks = await getArtworks();
+---
+
+<Base>
+  <main>
+    <ArtworkIndex client:load artworks={artworks} />
+  </main>
+</Base>
