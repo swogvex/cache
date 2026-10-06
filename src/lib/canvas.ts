@@ -18,7 +18,7 @@ export interface CanvasItem {
 
 export interface CanvasScene {
   items: CanvasItem[];
-  /** Obras sin coordenadas (hay que ejecutar `pnpm embed`). */
+  /** Obras ubicadas automáticamente por no tener coordenadas generadas. */
   missing: string[];
 }
 
@@ -36,6 +36,17 @@ const ITERATIONS = 400;
 const PULL = 0.02;
 /** Pasadas máximas del ajuste final sin atracción (garantiza cero solapes). */
 const SETTLE_ITERATIONS = 400;
+
+function fallbackPoint(id: string): readonly [number, number] {
+  let hash = 2166136261;
+  for (let i = 0; i < id.length; i++) {
+    hash = Math.imul(hash ^ id.charCodeAt(i), 16777619);
+  }
+  const x = (hash >>> 0) / 4294967296;
+  hash = Math.imul(hash ^ 0x9e3779b9, 16777619);
+  const y = (hash >>> 0) / 4294967296;
+  return [0.04 + x * 0.92, 0.04 + y * 0.92];
+}
 
 interface Tile {
   artwork: Artwork;
@@ -109,12 +120,12 @@ export function buildCanvas(artworks: Artwork[]): CanvasScene {
 
   for (const artwork of artworks) {
     const point = coords[artwork.id];
-    if (point) placed.push({ artwork, point });
-    else missing.push(artwork.id);
+    if (!point) missing.push(artwork.id);
+    placed.push({ artwork, point: point ?? fallbackPoint(artwork.id) });
   }
 
   // El mapa empieza compacto (área total ≈ área de las miniaturas) y se "descomprime" al separarlas.
-  const span = Math.sqrt(placed.length * TILE_AREA) * SPREAD;
+  const span = Math.sqrt(artworks.length * TILE_AREA) * SPREAD;
 
   const tiles: Tile[] = placed.map(({ artwork, point }) => {
     const ratio = artwork.image.width / artwork.image.height;
@@ -126,20 +137,18 @@ export function buildCanvas(artworks: Artwork[]): CanvasScene {
 
   pack(tiles);
 
-  const items = tiles.map(
-    (tile): CanvasItem => ({
-      id: tile.artwork.id,
-      number: tile.artwork.number,
-      title: tile.artwork.title,
-      author: tile.artwork.author,
-      date: tile.artwork.date,
-      thumb: tile.artwork.image.thumb,
-      width: round(tile.w),
-      height: round(tile.h),
-      cx: round(tile.x),
-      cy: round(tile.y),
-    }),
-  );
+  const items = tiles.map((tile): CanvasItem => ({
+    id: tile.artwork.id,
+    number: tile.artwork.number,
+    title: tile.artwork.title,
+    author: tile.artwork.author,
+    date: tile.artwork.date,
+    thumb: tile.artwork.image.thumb,
+    width: round(tile.w),
+    height: round(tile.h),
+    cx: round(tile.x),
+    cy: round(tile.y),
+  }));
 
   return { items, missing };
 }

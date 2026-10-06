@@ -85,6 +85,11 @@ button {
   color: var(--muted);
 }
 
+.nav>a.nav-link {
+  width: 40px;
+  text-align: left;
+}
+
 .nav-link:hover,
 .nav-link:focus-visible {
   color: var(--text);
@@ -97,7 +102,7 @@ button {
   padding: 0 var(--gutter);
 }
 
-.list > li {
+.list>li {
   height: var(--row-h);
   border-bottom: 1px solid var(--line);
 }
@@ -113,7 +118,7 @@ button {
   white-space: nowrap;
 }
 
-.row > img {
+.row>img {
   align-self: center;
   justify-self: center;
   width: 28px;
@@ -121,7 +126,7 @@ button {
   object-fit: contain;
 }
 
-.row > span {
+.row>span {
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -137,7 +142,7 @@ button {
 }
 
 .row[data-active='true'],
-.row[data-active='true'] > span {
+.row[data-active='true']>span {
   color: var(--accent);
 }
 
