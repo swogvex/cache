@@ -1,6 +1,6 @@
 # Cache
 
-Art gallery built with Astro, React and TypeScript. Images live in Cloudflare R2 (`covers.swogvex.dev`); the site is deployed on Vercel.
+Art gallery built with Astro, React and TypeScript. Images live in Cloudflare R2 (`https://pub-ba72cfbce82546c4945d2eb34b973a31.r2.dev`); the site is deployed on Vercel.
 
 ## Add an artwork
 
@@ -26,6 +26,6 @@ git push                            # Vercel deploys automatically
 
 ## Environment
 
-`PUBLIC_IMAGES_BASE_URL` — base URL of the images. Default `/images` (local). Production: `https://covers.swogvex.dev`.
+`PUBLIC_IMAGES_BASE_URL` — base URL of the images. Default `/images` (local). Production: `https://pub-ba72cfbce82546c4945d2eb34b973a31.r2.dev/medium/ or thumbs/`.
 
 Never overwrite an image with the same file name (assets are cached for a year): rename it instead.
