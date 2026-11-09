@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import { inject } from '@vercel/analytics';
+import SpeedInsights from '@vercel/speed-insights/astro';
 
 inject();
 
@@ -40,5 +41,6 @@ const {
       const target = document.querySelector<HTMLElement>('[data-bounce]');
       if (target) initBounce(target);
     </script>
+    <SpeedInsights />
   </body>
 </html>
